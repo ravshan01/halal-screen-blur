@@ -1,0 +1,66 @@
+syntax = "proto3";
+package detection;
+
+service DetectionService {
+  rpc DetectImages(DetectImagesRequest) returns (DetectImagesResponse) {}
+}
+
+message DetectImagesRequest {
+  repeated Image images = 1;
+}
+message DetectImagesResponse {
+  repeated ImageDetections detections = 1;
+  DetectError error = 2;
+}
+
+message Image {
+  bytes content = 1;
+}
+message ImageDetections {
+  repeated Detection detections = 1;
+  Error error = 2;
+
+  message Error {
+    ErrorCode code = 1;
+    string message = 2;
+  }
+
+  enum ErrorCode {
+    UnsupportedFormat = 0;
+    Corrupted = 1;
+    MaxSizeExceeded = 2;
+    InternalError = 3;
+    Unexpected = 99;
+  }
+}
+
+
+message Detection {
+  DetectionObject object = 1;
+  float score = 2;
+  Coords coords = 3;
+
+  // Detection box coordinates in pixels
+  message Coords {
+    float x = 1;
+    float y = 2;
+    float width = 3;
+    float height = 4;
+  }
+}
+enum DetectionObject {
+  Person = 0;
+}
+
+message DetectError {
+  DetectErrorCode code = 1;
+  string message = 2;
+}
+enum DetectErrorCode {
+  BadRequest = 0;
+  MaxRequestsExceeded = 1;
+  MaxImagesExceeded = 2;
+
+  InternalError = 10;
+  Unexpected = 99;
+}
