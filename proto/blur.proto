@@ -1,0 +1,54 @@
+syntax = "proto3";
+package blur;
+
+import "detection.proto";
+
+service BlurService {
+  rpc BlurImages(BlurImagesRequest) returns (BlurImageResponse){}
+}
+
+message BlurImagesRequest {
+  repeated ImageForBlur images = 1;
+}
+message BlurImageResponse {
+  repeated BlurredImage blurred_images = 1;
+  BlurError error = 2;
+}
+
+message ImageForBlur {
+  bytes content = 1;
+  detection.Detection.Coords coords = 2;
+  // between 0 and 100
+  uint32 percentage = 3;
+}
+
+message BlurredImage {
+  bytes content = 1;
+  Error error = 2;
+
+  message Error {
+    ErrorCode code = 1;
+    string message = 2;
+  }
+
+  enum ErrorCode {
+    InvalidContent = 0;
+    InvalidPercentage = 1;
+    InternalError = 2;
+    Unexpected = 99;
+  }
+}
+
+message BlurError {
+  BlurErrorCode code = 1;
+  string message = 2;
+}
+
+enum BlurErrorCode {
+  BadRequest = 0;
+  MaxRequestsExceeded = 1;
+  MaxImagesExceeded = 2;
+
+  InternalError = 10;
+  Unexpected = 99;
+}
