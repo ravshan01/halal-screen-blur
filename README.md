@@ -31,9 +31,7 @@
       $ :qa
       ```
 
-```shell 
-protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative ./proto/detection.proto
-```
-```shell
-protoc --proto_path=proto --go_out=./proto --go_opt=paths=source_relative proto/detection.proto
-```
+  #### Generate
+    ```shell 
+    protoc --proto_path=proto --go_out=./proto --go_opt=paths=source_relative --go-grpc_out=./proto --go-grpc_opt=paths=source_relative ./proto/blur.proto
+    ```
