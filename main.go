@@ -1,25 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"google.golang.org/grpc"
+	"halal-screen-blur/app"
 	"halal-screen-blur/config"
 	"halal-screen-blur/proto"
 	"log"
 	"net"
 )
-
-type server struct {
-	proto.UnimplementedBlurServiceServer
-}
-
-func (s *server) BlurImages(ctx context.Context, req *proto.BlurImagesRequest) (*proto.BlurImageResponse, error) {
-	images := req.GetImages()
-	fmt.Println("images:", images)
-
-	return &proto.BlurImageResponse{}, nil
-}
 
 func main() {
 	cfg, cfgErr := config.LoadConfig(".env")
@@ -33,7 +22,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterBlurServiceServer(grpcServer, &server{})
+	proto.RegisterBlurServiceServer(grpcServer, app.NewServer())
 
 	log.Printf("server listening at %v", listener.Addr())
 	if err := grpcServer.Serve(listener); err != nil {
