@@ -6,8 +6,14 @@ import (
 	"log"
 )
 
+var cfg *Config
+
 type Config struct {
 	Port string `env:"PORT" envDefault:"5000"`
+}
+
+func GetConfig() *Config {
+	return cfg
 }
 
 func LoadConfig(filenames ...string) (*Config, error) {
@@ -17,12 +23,11 @@ func LoadConfig(filenames ...string) (*Config, error) {
 		return nil, err
 	}
 
-	var cfg Config
 	err = env.Parse(&cfg)
 	if err != nil {
 		log.Println("Error parsing env:", err)
 		return nil, err
 	}
 
-	return &cfg, nil
+	return cfg, nil
 }
