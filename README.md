@@ -5,7 +5,7 @@
   ```
   or for windows
   ```shell
-  ./scripts/install-tools.bat
+  cd scripts && install-tools.cmd && cd ..
   ```
 
 
