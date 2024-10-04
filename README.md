@@ -1,4 +1,22 @@
+# Main
+- Run `install-tools` script to install all necessary tools
+  ```shell
+  ./scripts/install-tools.sh
+  ```
+  or for windows
+  ```shell
+  ./scripts/install-tools.bat
+  ```
+
+
 ### Proto
+
+#### Docs
+
+- [Grpc documentation](https://grpc.io/docs/languages/go/quickstart/)
+- [Protobuf documentation](https://protobuf.dev/getting-started/gotutorial/)
+
+#### Repository
 
 - Репозиторий halal-screen-proto содержит `.proto` файлы
 - Репозиторий halal-screen-proto подключён в этот проект с использованием git subtree.
@@ -32,12 +50,13 @@
     $ :qa 
     ```
 
-  #### Generate
-  - Protobuf
-    ```shell 
-    protoc --proto_path=proto --go_out=./proto --go_opt=paths=source_relative ./proto/blur.proto ./proto/detection.proto
-    ```
-  - GRPC
-    ```shell
-    protoc --proto_path=proto --go-grpc_out=./proto --go-grpc_opt=paths=source_relative ./proto/blur.proto
-    ```
+#### Generate
+
+- Protobuf
+  ```shell 
+  protoc --proto_path=proto --go_out=./proto --go_opt=paths=source_relative ./proto/blur.proto ./proto/detection.proto
+  ```
+- GRPC
+  ```shell
+   protoc --proto_path=proto --go-grpc_out=./proto --go-grpc_opt=paths=source_relative ./proto/blur.proto
+  ```
