@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 var cfg *Config = &Config{}
@@ -19,13 +18,11 @@ func GetConfig() *Config {
 func LoadConfig(filenames ...string) (*Config, error) {
 	err := godotenv.Load(filenames...)
 	if err != nil {
-		log.Println("Error loading env files:", err)
 		return nil, err
 	}
 
 	err = env.Parse(cfg)
 	if err != nil {
-		log.Println("Error parsing env:", err)
 		return nil, err
 	}
 
