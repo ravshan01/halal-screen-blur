@@ -64,6 +64,7 @@ func (s *ImagesService) bytesToImage(imgBytes []byte) (*image.Image, error) {
 	return &img, nil
 }
 
+// imageToBytes converts an image to bytes with png.Encode
 func (s *ImagesService) imageToBytes(img image.Image) (*[]byte, error) {
 	buf := new(bytes.Buffer)
 	err := png.Encode(buf, img)
