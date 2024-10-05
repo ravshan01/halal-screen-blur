@@ -30,12 +30,12 @@
   - Fetch and Pull script 
     ```shell
     # master - branch name
-    $ scripts/fetch-and-pull-proto.sh master
+    $ scripts/proto-fetch-pull.sh master
     ```
     Or windows
     ```shell
     # master - branch name
-    $ cd scripts && fetch-and-pull-proto.cmd master && cd ..
+    $ cd scripts && proto-fetch-pull.cmd master && cd ..
     ```
   - Add
     ```shell
