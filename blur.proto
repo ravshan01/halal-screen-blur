@@ -5,7 +5,7 @@ option go_package = "./proto";
 import "detection.proto";
 
 service BlurService {
-  rpc BlurImages(BlurImagesRequest) returns (BlurImageResponse){}
+  rpc BlurImages(BlurImagesRequest) returns (BlurImagesResponse){}
 }
 
 message BlurImagesRequest {
