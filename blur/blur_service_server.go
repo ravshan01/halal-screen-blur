@@ -4,22 +4,27 @@ import (
 	"context"
 	"fmt"
 	"halal-screen-blur/config"
+	"halal-screen-blur/images"
 	"halal-screen-blur/proto"
 )
 
 type BlurServiceServer struct {
 	proto.UnimplementedBlurServiceServer
+
+	imagesService images.IIMagesService
 }
 
 func NewBlurServiceServer() *BlurServiceServer {
-	return &BlurServiceServer{}
+	return &BlurServiceServer{
+		imagesService: &images.ImagesService{},
+	}
 }
 
 func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImageResponse, error) {
-	images := req.GetImages()
-	fmt.Println("images:", images)
+	imagesForBlur := req.GetImages()
+	fmt.Println("imagesForBlur:", imagesForBlur)
 
-	res := s.checkHasImagesAndNotTooMany(images)
+	res := s.checkHasImagesAndNotTooMany(imagesForBlur)
 	if res != nil {
 		return res, nil
 	}
@@ -30,22 +35,22 @@ func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesR
 /*
 Return `BlurImagesResponse` with error if no images provided or too many images
 */
-func (s *BlurServiceServer) checkHasImagesAndNotTooMany(images []*proto.ImageForBlur) *proto.BlurImageResponse {
-	if len(images) == 0 {
+func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.ImageForBlur) *proto.BlurImageResponse {
+	if len(imagesForBlur) == 0 {
 		return &proto.BlurImageResponse{
 			Error: &proto.BlurError{
 				Code:    proto.BlurErrorCode_BadRequest,
-				Message: "no images provided",
+				Message: "no imagesForBlur provided",
 			},
 		}
 	}
 
 	cfg := config.GetConfig()
-	if len(images) > cfg.MaxImagesPerRequest {
+	if len(imagesForBlur) > cfg.MaxImagesPerRequest {
 		return &proto.BlurImageResponse{
 			Error: &proto.BlurError{
 				Code:    proto.BlurErrorCode_BadRequest,
-				Message: "too many images",
+				Message: "too many imagesForBlur",
 			},
 		}
 	}
