@@ -13,13 +13,13 @@ import (
 type ImagesService struct {
 }
 
-func (s *ImagesService) CheckIsValidImage(imgBytes []byte) (bool, error) {
+func (s *ImagesService) CheckIsValidImage(imgBytes []byte) bool {
 	_, err := s.bytesToImage(imgBytes)
 	if err != nil {
-		return false, err
+		return false
 	}
 
-	return true, nil
+	return true
 }
 
 func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error) {
