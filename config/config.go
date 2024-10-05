@@ -8,7 +8,8 @@ import (
 var cfg *Config = &Config{}
 
 type Config struct {
-	Port int `env:"PORT" envDefault:"5000"`
+	Port                int `env:"PORT" envDefault:"5000"`
+	MaxImagesPerRequest int `env:"MAX_IMAGES_PER_REQUEST" envDefault:"10"`
 }
 
 func GetConfig() *Config {
