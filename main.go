@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"google.golang.org/grpc"
-	"halal-screen-blur/app"
+	"halal-screen-blur/blur"
 	"halal-screen-blur/config"
 	"halal-screen-blur/proto"
 	"log"
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterBlurServiceServer(grpcServer, app.NewBlurServiceServer())
+	proto.RegisterBlurServiceServer(grpcServer, blur.NewBlurServiceServer())
 
 	log.Printf("server listening at %v", listener.Addr())
 	if err := grpcServer.Serve(listener); err != nil {
