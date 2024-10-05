@@ -7,15 +7,15 @@ import (
 	"halal-screen-blur/proto"
 )
 
-type Server struct {
+type BlurServiceServer struct {
 	proto.UnimplementedBlurServiceServer
 }
 
-func NewServer() *Server {
-	return &Server{}
+func NewBlurServiceServer() *BlurServiceServer {
+	return &BlurServiceServer{}
 }
 
-func (s *Server) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImageResponse, error) {
+func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImageResponse, error) {
 	images := req.GetImages()
 	fmt.Println("images:", images)
 
@@ -30,7 +30,7 @@ func (s *Server) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*p
 /*
 Return `BlurImagesResponse` with error if no images provided or too many images
 */
-func (s *Server) checkHasImagesAndNotTooMany(images []*proto.ImageForBlur) *proto.BlurImageResponse {
+func (s *BlurServiceServer) checkHasImagesAndNotTooMany(images []*proto.ImageForBlur) *proto.BlurImageResponse {
 	if len(images) == 0 {
 		return &proto.BlurImageResponse{
 			Error: &proto.BlurError{

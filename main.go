@@ -22,7 +22,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterBlurServiceServer(grpcServer, app.NewServer())
+	proto.RegisterBlurServiceServer(grpcServer, app.NewBlurServiceServer())
 
 	log.Printf("server listening at %v", listener.Addr())
 	if err := grpcServer.Serve(listener); err != nil {
