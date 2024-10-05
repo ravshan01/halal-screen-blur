@@ -31,7 +31,7 @@ func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error)
 		return nil, InvalidBlurPercentageError
 	}
 
-	blurredImg := imaging.Blur(*img, float64(percentage))
+	blurredImg := imaging.Blur(*img, float64(percentage)/2.5)
 	blurredImgBytes, bytesErr := s.imageToBytes(blurredImg)
 	if bytesErr != nil {
 		return nil, bytesErr
