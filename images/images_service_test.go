@@ -94,6 +94,39 @@ func TestImagesService_Crop(t *testing.T) {
 	})
 }
 
+func TestImagesService_Paste(t *testing.T) {
+	// Check './mock/processed/mock-image__pasted.jpg' to see the pasted image
+	t.Run("should return pasted image", func(t *testing.T) {
+		cropRect := image.Rect(0, 0, 400, 400)
+		croppedImgPointer, cropErr := imagesService.Crop(img, cropRect)
+		croppedImg := *croppedImgPointer
+		if cropErr != nil {
+			t.Fatalf("expected no error, got %v", cropErr)
+		}
+
+		pasteRect := image.Point{X: 200, Y: 200}
+		pastedImgPointer, err := imagesService.Paste(img, croppedImg, pasteRect)
+		if err != nil {
+			t.Fatalf("expected no error, got %v", err)
+		}
+
+		pastedImg := *pastedImgPointer
+		if pastedImg.Bounds().Dx() != img.Bounds().Dx() || pastedImg.Bounds().Dy() != img.Bounds().Dy() {
+			t.Fatalf("expected pasted image to have same dimensions as original image")
+		}
+
+		pastedImgBytes, toBytesErr := imagesService.ImageToBytes(pastedImg)
+		if toBytesErr != nil {
+			t.Fatalf("failed to convert image to bytes")
+		}
+
+		err = os.WriteFile("./mock/processed/mock-image__pasted.png", *pastedImgBytes, 0644)
+		if err != nil {
+			fmt.Println("failed to write pasted image")
+		}
+	})
+}
+
 func TestImagesService_BytesToImage(t *testing.T) {
 	t.Run("should return image", func(t *testing.T) {
 		imgPointer, err := imagesService.BytesToImage(imgBytes)

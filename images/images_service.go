@@ -49,6 +49,13 @@ func (s *ImagesService) BytesToImage(imgBytes []byte) (*image.Image, error) {
 	return &img, nil
 }
 
+func (s *ImagesService) Paste(img image.Image, pasteImage image.Image, coords image.Point) (*image.Image, error) {
+	pastedImgNRGBA := imaging.Paste(img, pasteImage, coords)
+	var pastedImg image.Image = pastedImgNRGBA
+
+	return &pastedImg, nil
+}
+
 // ImageToBytes converts an image to bytes with png.Encode
 func (s *ImagesService) ImageToBytes(img image.Image) (*[]byte, error) {
 	buf := new(bytes.Buffer)
