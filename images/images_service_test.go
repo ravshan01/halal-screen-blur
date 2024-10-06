@@ -44,7 +44,7 @@ func TestImagesService_Blur(t *testing.T) {
 
 	// Check './mock/processed/mock-image__blurred.jpg' to see the blurred image
 	t.Run("should return blurred image", func(t *testing.T) {
-		blurredImgPointer, err := imagesService.Blur(img, 0)
+		blurredImgPointer, err := imagesService.Blur(img, 50)
 		if err != nil {
 			t.Fatalf("expected no error, got %v", err)
 		}
@@ -54,15 +54,7 @@ func TestImagesService_Blur(t *testing.T) {
 			t.Fatalf("expected blurred image to have same dimensions as original image")
 		}
 
-		blurredImgBytes, toBytesErr := imagesService.ImageToBytes(blurredImg)
-		if toBytesErr != nil {
-			t.Fatalf("failed to convert image to bytes")
-		}
-
-		err = os.WriteFile("./mock/processed/mock-image__blurred.png", *blurredImgBytes, 0644)
-		if err != nil {
-			fmt.Println("failed to write blurred image")
-		}
+		saveImage(blurredImg, "blurred")
 	})
 }
 
@@ -82,15 +74,7 @@ func TestImagesService_Crop(t *testing.T) {
 			t.Fatalf("expected cropped image to have width %d and height %d, got width %d and height %d", width, height, croppedImg.Bounds().Dx(), croppedImg.Bounds().Dy())
 		}
 
-		croppedImgBytes, toBytesErr := imagesService.ImageToBytes(croppedImg)
-		if toBytesErr != nil {
-			t.Fatalf("failed to convert image to bytes")
-		}
-
-		err = os.WriteFile("./mock/processed/mock-image__cropped.png", *croppedImgBytes, 0644)
-		if err != nil {
-			fmt.Println("failed to write cropped image")
-		}
+		saveImage(croppedImg, "cropped")
 	})
 }
 
@@ -115,15 +99,7 @@ func TestImagesService_Paste(t *testing.T) {
 			t.Fatalf("expected pasted image to have same dimensions as original image")
 		}
 
-		pastedImgBytes, toBytesErr := imagesService.ImageToBytes(pastedImg)
-		if toBytesErr != nil {
-			t.Fatalf("failed to convert image to bytes")
-		}
-
-		err = os.WriteFile("./mock/processed/mock-image__pasted.png", *pastedImgBytes, 0644)
-		if err != nil {
-			fmt.Println("failed to write pasted image")
-		}
+		saveImage(pastedImg, "pasted")
 	})
 }
 
@@ -175,4 +151,17 @@ func TestMain(m *testing.M) {
 	img = *origImg
 
 	os.Exit(m.Run())
+}
+
+func saveImage(img image.Image, action string) {
+	bytes, toBytesErr := imagesService.ImageToBytes(img)
+	if toBytesErr != nil {
+		fmt.Printf("failed to convert image to bytes for %s\n", action)
+		return
+	}
+
+	err := os.WriteFile(fmt.Sprintf("./mock/processed/mock-image__%s.png", action), *bytes, 0644)
+	if err != nil {
+		fmt.Printf("failed to write %s image\n", action)
+	}
 }
