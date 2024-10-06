@@ -11,7 +11,7 @@ service BlurService {
 message BlurImagesRequest {
   repeated ImageForBlur images = 1;
 }
-message BlurImageResponse {
+message BlurImagesResponse {
   repeated BlurredImage blurred_images = 1;
   BlurError error = 2;
 }
