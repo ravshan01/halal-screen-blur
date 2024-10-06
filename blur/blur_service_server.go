@@ -49,7 +49,7 @@ func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.I
 	if len(imagesForBlur) > cfg.MaxImagesPerRequest {
 		return &proto.BlurImagesResponse{
 			Error: &proto.BlurError{
-				Code:    proto.BlurErrorCode_BadRequest,
+				Code:    proto.BlurErrorCode_MaxImagesExceeded,
 				Message: "too many imagesForBlur",
 			},
 		}
