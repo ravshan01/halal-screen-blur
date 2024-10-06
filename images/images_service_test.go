@@ -113,6 +113,37 @@ func TestImagesService_Crop(t *testing.T) {
 	})
 }
 
+func TestImagesService_BytesToImage(t *testing.T) {
+	t.Run("should return image", func(t *testing.T) {
+		imgPointer, err := imagesService.BytesToImage(imgBytes)
+		if err != nil {
+			t.Fatalf("expected no error, got %v", err)
+		}
+		if imgPointer == nil {
+			t.Fatalf("expected image to be returned")
+		}
+	})
+
+	t.Run("should return error if image is invalid", func(t *testing.T) {
+		_, err := imagesService.BytesToImage([]byte{})
+		if err == nil {
+			t.Fatalf("expected error to be returned")
+		}
+	})
+}
+
+func TestImagesService_ImageToBytes(t *testing.T) {
+	t.Run("should return bytes", func(t *testing.T) {
+		bytesPointer, err := imagesService.ImageToBytes(img)
+		if err != nil {
+			t.Fatalf("expected no error, got %v", err)
+		}
+		if bytesPointer == nil {
+			t.Fatalf("expected bytes to be returned")
+		}
+	})
+}
+
 func TestMain(m *testing.M) {
 	bytes, err := os.ReadFile("./mock/mock-image.jpg")
 	if err != nil {
