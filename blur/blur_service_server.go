@@ -20,7 +20,7 @@ func NewBlurServiceServer() *BlurServiceServer {
 	}
 }
 
-func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImageResponse, error) {
+func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImagesResponse, error) {
 	imagesForBlur := req.GetImages()
 	fmt.Println("imagesForBlur:", imagesForBlur)
 
@@ -29,15 +29,15 @@ func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesR
 		return res, nil
 	}
 
-	return &proto.BlurImageResponse{}, nil
+	return &proto.BlurImagesResponse{}, nil
 }
 
 /*
 Return `BlurImagesResponse` with error if no images provided or too many images
 */
-func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.ImageForBlur) *proto.BlurImageResponse {
+func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.ImageForBlur) *proto.BlurImagesResponse {
 	if len(imagesForBlur) == 0 {
-		return &proto.BlurImageResponse{
+		return &proto.BlurImagesResponse{
 			Error: &proto.BlurError{
 				Code:    proto.BlurErrorCode_BadRequest,
 				Message: "no imagesForBlur provided",
@@ -47,7 +47,7 @@ func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.I
 
 	cfg := config.GetConfig()
 	if len(imagesForBlur) > cfg.MaxImagesPerRequest {
-		return &proto.BlurImageResponse{
+		return &proto.BlurImagesResponse{
 			Error: &proto.BlurError{
 				Code:    proto.BlurErrorCode_BadRequest,
 				Message: "too many imagesForBlur",
