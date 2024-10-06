@@ -2,11 +2,12 @@ images/mock/processed/*
 !images/mock/processed/README.md
 .idea
 
-
-# Created by https://www.toptal.com/developers/gitignore/api/jetbrains,go,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains,go,visualstudiocode
-
 ### Go ###
+
+# Test binary, built with `go test -c`
+*.test
+!.env.test
+
 # If you prefer the allow list template instead of the deny list, see community template:
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
@@ -16,9 +17,6 @@ images/mock/processed/*
 *.dll
 *.so
 *.dylib
-
-# Test binary, built with `go test -c`
-*.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
