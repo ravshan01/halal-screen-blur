@@ -2,7 +2,6 @@ package blur
 
 import (
 	"context"
-	"fmt"
 	"halal-screen-blur/config"
 	"halal-screen-blur/images"
 	"halal-screen-blur/proto"
@@ -22,7 +21,6 @@ func NewBlurServiceServer() *BlurServiceServer {
 
 func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImagesResponse, error) {
 	imagesForBlur := req.GetImages()
-	fmt.Println("imagesForBlur:", imagesForBlur)
 
 	res := s.checkHasImagesAndNotTooMany(imagesForBlur)
 	if res != nil {
