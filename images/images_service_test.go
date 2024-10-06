@@ -59,7 +59,7 @@ func TestImagesService_Blur(t *testing.T) {
 			t.Fatalf("expected blurred image to have bytes")
 		}
 
-		blurredImgPointer, toImgErr := imagesService.bytesToImage(*blurredImgBytes)
+		blurredImgPointer, toImgErr := imagesService.BytesToImage(*blurredImgBytes)
 		if toImgErr != nil {
 			t.Fatalf("failed to convert bytes to image")
 		}
@@ -96,7 +96,7 @@ func TestImagesService_Crop(t *testing.T) {
 			t.Fatalf("expected cropped image to have bytes")
 		}
 
-		croppedImgPointer, toImgErr := imagesService.bytesToImage(*croppedImgBytes)
+		croppedImgPointer, toImgErr := imagesService.BytesToImage(*croppedImgBytes)
 		if toImgErr != nil {
 			t.Fatalf("failed to convert bytes to image")
 		}
@@ -121,7 +121,7 @@ func TestMain(m *testing.M) {
 	}
 	imgBytes = bytes
 
-	origImg, toImgErr := imagesService.bytesToImage(bytes)
+	origImg, toImgErr := imagesService.BytesToImage(bytes)
 	if toImgErr != nil {
 		fmt.Println("failed to convert bytes to image")
 		os.Exit(1)

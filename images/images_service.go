@@ -14,7 +14,7 @@ type ImagesService struct {
 }
 
 func (s *ImagesService) CheckIsValidImage(imgBytes []byte) bool {
-	_, err := s.bytesToImage(imgBytes)
+	_, err := s.BytesToImage(imgBytes)
 	if err != nil {
 		return false
 	}
@@ -23,7 +23,7 @@ func (s *ImagesService) CheckIsValidImage(imgBytes []byte) bool {
 }
 
 func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error) {
-	img, imgErr := s.bytesToImage(imgBytes)
+	img, imgErr := s.BytesToImage(imgBytes)
 	if imgErr != nil {
 		return nil, InvalidImageError
 	}
@@ -32,7 +32,7 @@ func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error)
 	}
 
 	blurredImg := imaging.Blur(*img, float64(percentage)/2.5)
-	blurredImgBytes, bytesErr := s.imageToBytes(blurredImg)
+	blurredImgBytes, bytesErr := s.ImageToBytes(blurredImg)
 	if bytesErr != nil {
 		return nil, bytesErr
 	}
@@ -41,13 +41,13 @@ func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error)
 }
 
 func (s *ImagesService) Crop(imgBytes []byte, coords [4]int) (*[]byte, error) {
-	img, imgErr := s.bytesToImage(imgBytes)
+	img, imgErr := s.BytesToImage(imgBytes)
 	if imgErr != nil {
 		return nil, InvalidImageError
 	}
 
 	croppedImg := imaging.Crop(*img, image.Rect(coords[0], coords[1], coords[0]+coords[2], coords[1]+coords[3]))
-	croppedImgBytes, bytesErr := s.imageToBytes(croppedImg)
+	croppedImgBytes, bytesErr := s.ImageToBytes(croppedImg)
 	if bytesErr != nil {
 		return nil, bytesErr
 	}
@@ -55,7 +55,7 @@ func (s *ImagesService) Crop(imgBytes []byte, coords [4]int) (*[]byte, error) {
 	return croppedImgBytes, nil
 }
 
-func (s *ImagesService) bytesToImage(imgBytes []byte) (*image.Image, error) {
+func (s *ImagesService) BytesToImage(imgBytes []byte) (*image.Image, error) {
 	img, _, err := image.Decode(bytes.NewReader(imgBytes))
 	if err != nil {
 		return nil, err
@@ -64,8 +64,8 @@ func (s *ImagesService) bytesToImage(imgBytes []byte) (*image.Image, error) {
 	return &img, nil
 }
 
-// imageToBytes converts an image to bytes with png.Encode
-func (s *ImagesService) imageToBytes(img image.Image) (*[]byte, error) {
+// ImageToBytes converts an image to bytes with png.Encode
+func (s *ImagesService) ImageToBytes(img image.Image) (*[]byte, error) {
 	buf := new(bytes.Buffer)
 	err := png.Encode(buf, img)
 	if err != nil {
