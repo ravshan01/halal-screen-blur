@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlurServiceClient interface {
-	BlurImages(ctx context.Context, in *BlurImagesRequest, opts ...grpc.CallOption) (*BlurImageResponse, error)
+	BlurImages(ctx context.Context, in *BlurImagesRequest, opts ...grpc.CallOption) (*BlurImagesResponse, error)
 }
 
 type blurServiceClient struct {
@@ -37,9 +37,9 @@ func NewBlurServiceClient(cc grpc.ClientConnInterface) BlurServiceClient {
 	return &blurServiceClient{cc}
 }
 
-func (c *blurServiceClient) BlurImages(ctx context.Context, in *BlurImagesRequest, opts ...grpc.CallOption) (*BlurImageResponse, error) {
+func (c *blurServiceClient) BlurImages(ctx context.Context, in *BlurImagesRequest, opts ...grpc.CallOption) (*BlurImagesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BlurImageResponse)
+	out := new(BlurImagesResponse)
 	err := c.cc.Invoke(ctx, BlurService_BlurImages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (c *blurServiceClient) BlurImages(ctx context.Context, in *BlurImagesReques
 // All implementations must embed UnimplementedBlurServiceServer
 // for forward compatibility.
 type BlurServiceServer interface {
-	BlurImages(context.Context, *BlurImagesRequest) (*BlurImageResponse, error)
+	BlurImages(context.Context, *BlurImagesRequest) (*BlurImagesResponse, error)
 	mustEmbedUnimplementedBlurServiceServer()
 }
 
@@ -62,7 +62,7 @@ type BlurServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBlurServiceServer struct{}
 
-func (UnimplementedBlurServiceServer) BlurImages(context.Context, *BlurImagesRequest) (*BlurImageResponse, error) {
+func (UnimplementedBlurServiceServer) BlurImages(context.Context, *BlurImagesRequest) (*BlurImagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlurImages not implemented")
 }
 func (UnimplementedBlurServiceServer) mustEmbedUnimplementedBlurServiceServer() {}
