@@ -22,37 +22,22 @@ func (s *ImagesService) CheckIsValidImage(imgBytes []byte) bool {
 	return true
 }
 
-func (s *ImagesService) Blur(imgBytes []byte, percentage int32) (*[]byte, error) {
-	img, imgErr := s.BytesToImage(imgBytes)
-	if imgErr != nil {
-		return nil, InvalidImageError
-	}
+func (s *ImagesService) Blur(img image.Image, percentage int32) (*image.Image, error) {
 	if percentage < 0 || percentage > 100 {
 		return nil, InvalidBlurPercentageError
 	}
 
-	blurredImg := imaging.Blur(*img, float64(percentage)/2.5)
-	blurredImgBytes, bytesErr := s.ImageToBytes(blurredImg)
-	if bytesErr != nil {
-		return nil, bytesErr
-	}
+	blurredImgNRGBA := imaging.Blur(img, float64(percentage)/2.5)
+	var blurredImg image.Image = blurredImgNRGBA
 
-	return blurredImgBytes, nil
+	return &blurredImg, nil
 }
 
-func (s *ImagesService) Crop(imgBytes []byte, coords [4]int) (*[]byte, error) {
-	img, imgErr := s.BytesToImage(imgBytes)
-	if imgErr != nil {
-		return nil, InvalidImageError
-	}
+func (s *ImagesService) Crop(img image.Image, coords image.Rectangle) (*image.Image, error) {
+	croppedImgNRGBA := imaging.Crop(img, coords)
+	var croppedImg image.Image = croppedImgNRGBA
 
-	croppedImg := imaging.Crop(*img, image.Rect(coords[0], coords[1], coords[0]+coords[2], coords[1]+coords[3]))
-	croppedImgBytes, bytesErr := s.ImageToBytes(croppedImg)
-	if bytesErr != nil {
-		return nil, bytesErr
-	}
-
-	return croppedImgBytes, nil
+	return &croppedImg, nil
 }
 
 func (s *ImagesService) BytesToImage(imgBytes []byte) (*image.Image, error) {
