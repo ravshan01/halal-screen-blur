@@ -1,4 +1,5 @@
 # Main
+
 - Run `install-tools` script to install all necessary tools
   ```shell
   $ scripts/install-tools.sh
@@ -7,7 +8,6 @@
   ```shell
   $ cd scripts && install-tools.cmd && cd ..
   ```
-
 
 ### Proto
 
@@ -26,40 +26,40 @@
     $ git remote add halal-screen-proto git@github.com:ravshan01/halal-screen-proto.git
   ```
 
-  #### Subtree Control
-  - Fetch and Pull script 
-    ```shell
-    # master - branch name
-    $ scripts/proto-fetch-pull.sh master
-    ```
-    Or windows
-    ```shell
-    # master - branch name
-    $ cd scripts && proto-fetch-pull.cmd master && cd ..
-    ```
-  - Add
-    ```shell
-    $ git subtree add --prefix proto halal-screen-proto master --squash
-    ``` 
-  - Fetch
-    ```shell
-    $ git fetch halal-screen-proto master
-    ```
-  - Pull
-    ```shell
-    $ git subtree pull --prefix proto halal-screen-proto master --squash
-    ```
-    ```shell
-    $ :qa
-    ```
+#### Subtree Control
+
+- Fetch and Pull script
+  ```shell
+  $ scripts/proto-fetch-pull.sh master
+  ```
+  Or windows
+  ```shell
+  $ cd scripts && proto-fetch-pull.cmd master && cd ..
+  ```
+- Add
+  ```shell
+  $ git subtree add --prefix proto halal-screen-proto master --squash
+  ``` 
+- Fetch
+  ```shell
+  $ git fetch halal-screen-proto master
+  ```
+- Pull
+  ```shell
+  $ git subtree pull --prefix proto halal-screen-proto master --squash
+  ```
+  ```shell
+  $ :qa
+  ```
 
 #### Generate
 
-- Protobuf
-  ```shell 
-  $ protoc --proto_path=proto --go_out=./proto --go_opt=paths=source_relative ./proto/blur.proto ./proto/detection.proto
-  ```
-- GRPC
-  ```shell
-   $ protoc --proto_path=proto --go-grpc_out=./proto --go-grpc_opt=paths=source_relative ./proto/blur.proto
-  ```
+```shell
+$ scripts/proto-grpc-generate.sh
+```
+
+for windows
+
+```shell
+$ cd scripts && proto-grpc-generate.cmd && cd ..
+```
