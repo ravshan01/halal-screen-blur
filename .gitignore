@@ -1,4 +1,5 @@
-images/mock/processed
+images/mock/processed/*
+!images/mock/processed/README.md
 .idea
 
 
