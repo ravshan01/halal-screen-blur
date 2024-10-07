@@ -33,9 +33,10 @@ message BlurredImage {
   }
 
   enum ErrorCode {
-    InvalidContent = 0;
-    InvalidPercentage = 1;
-    InternalError = 2;
+    InvalidImage = 0;
+    MaxSizeExceeded = 1;
+    InvalidPercentage = 2;
+    InternalError = 10;
     Unexpected = 99;
   }
 }
