@@ -27,10 +27,9 @@ message ImageDetections {
   }
 
   enum ErrorCode {
-    UnsupportedFormat = 0;
-    Corrupted = 1;
-    MaxSizeExceeded = 2;
-    InternalError = 3;
+    InvalidImage = 0;
+    MaxSizeExceeded = 1;
+    InternalError = 10;
     Unexpected = 99;
   }
 }
