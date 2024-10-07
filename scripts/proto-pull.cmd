@@ -9,7 +9,6 @@ REM and then back to the original directory
 set DIR=%CD%
 cd ..
 
-git fetch halal-screen-proto %BRANCH_NAME%
 git subtree pull --prefix proto halal-screen-proto %BRANCH_NAME% --squash
 
 cd %DIR%

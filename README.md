@@ -28,14 +28,6 @@
 
 #### Subtree Control
 
-- Fetch and Pull script
-  ```shell
-  $ scripts/proto-fetch-pull.sh master
-  ```
-  Or windows
-  ```shell
-  $ cd scripts && proto-fetch-pull.cmd master && cd ..
-  ```
 - Add
   ```shell
   $ git subtree add --prefix proto halal-screen-proto master --squash
@@ -50,6 +42,14 @@
   ```
   ```shell
   $ :qa
+  ```
+  Or use script
+  ```shell
+  scripts/proto-pull.sh
+  ```
+  for windows
+  ```shell
+  cd scripts && proto-pull.cmd && cd ..
   ```
 
 #### Generate
