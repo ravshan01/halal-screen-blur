@@ -45,11 +45,11 @@
   ```
   Or use script
   ```shell
-  scripts/proto-pull.sh
+  $ scripts/proto-pull.sh
   ```
   for windows
   ```shell
-  cd scripts && proto-pull.cmd && cd ..
+  $ cd scripts && proto-pull.cmd && cd ..
   ```
 
 #### Generate
