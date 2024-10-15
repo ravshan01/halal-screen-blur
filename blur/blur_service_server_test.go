@@ -11,20 +11,6 @@ import (
 
 var blurServiceServer *BlurServiceServer
 
-func setupBlurServiceServerTest() {
-	_, err := config.LoadConfig("../.env.test")
-	if err != nil {
-		fmt.Println("failed to load config, got:", err)
-		os.Exit(1)
-	}
-
-	blurServiceServer = NewBlurServiceServer()
-}
-
-func teardownBlurServiceServerTest() {
-
-}
-
 func TestBlurServiceServerIsDefined(t *testing.T) {
 	setupBlurServiceServerTest()
 	defer teardownBlurServiceServerTest()
@@ -63,4 +49,18 @@ func TestBlurServiceServer_BlurImages(t *testing.T) {
 			t.Fatalf("expected MaxImagesExceeded error, got %v", res.GetError().GetCode())
 		}
 	})
+}
+
+func setupBlurServiceServerTest() {
+	_, err := config.LoadConfig("../.env.test")
+	if err != nil {
+		fmt.Println("failed to load config, got:", err)
+		os.Exit(1)
+	}
+
+	blurServiceServer = NewBlurServiceServer()
+}
+
+func teardownBlurServiceServerTest() {
+
 }
