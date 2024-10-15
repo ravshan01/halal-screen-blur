@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-var imagesService = ImagesService{}
+var imagesService = NewImagesService()
 
 var imgBytes []byte
 var img image.Image

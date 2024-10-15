@@ -15,7 +15,7 @@ type BlurServiceServer struct {
 
 func NewBlurServiceServer() *BlurServiceServer {
 	return &BlurServiceServer{
-		imagesService: &images.ImagesService{},
+		imagesService: images.NewImagesService(),
 	}
 }
 

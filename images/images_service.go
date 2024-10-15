@@ -13,6 +13,10 @@ import (
 type ImagesService struct {
 }
 
+func NewImagesService() *ImagesService {
+	return &ImagesService{}
+}
+
 func (s *ImagesService) CheckIsValidImage(imgBytes []byte) bool {
 	_, err := s.BytesToImage(imgBytes)
 	if err != nil {
