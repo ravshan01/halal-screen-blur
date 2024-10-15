@@ -62,5 +62,4 @@ func setupBlurServiceServerTest() {
 }
 
 func teardownBlurServiceServerTest() {
-
 }

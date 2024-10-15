@@ -14,6 +14,9 @@ var imgBytes []byte
 var img image.Image
 
 func TestImagesService_CheckIsValidImage(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	t.Run("valid image", func(t *testing.T) {
 		valid := imagesService.CheckIsValidImage(imgBytes)
 		if !valid {
@@ -30,6 +33,9 @@ func TestImagesService_CheckIsValidImage(t *testing.T) {
 }
 
 func TestImagesService_Blur(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	t.Run("should return InvalidBlurPercentageError if percentage < 0 or > 100 ", func(t *testing.T) {
 		_, err := imagesService.Blur(img, -1)
 		if !errors.Is(err, InvalidBlurPercentageError) {
@@ -59,6 +65,9 @@ func TestImagesService_Blur(t *testing.T) {
 }
 
 func TestImagesService_Crop(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	// Check './mock/processed/mock-image__cropped.jpg' to see the cropped image
 	t.Run("should return cropped image", func(t *testing.T) {
 		x1, y1, width, height := 0, 0, 400, 200
@@ -79,6 +88,9 @@ func TestImagesService_Crop(t *testing.T) {
 }
 
 func TestImagesService_Paste(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	// Check './mock/processed/mock-image__pasted.jpg' to see the pasted image
 	t.Run("should return pasted image", func(t *testing.T) {
 		cropRect := image.Rect(0, 0, 400, 400)
@@ -104,6 +116,9 @@ func TestImagesService_Paste(t *testing.T) {
 }
 
 func TestImagesService_BytesToImage(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	t.Run("should return image", func(t *testing.T) {
 		imgPointer, err := imagesService.BytesToImage(imgBytes)
 		if err != nil {
@@ -123,6 +138,9 @@ func TestImagesService_BytesToImage(t *testing.T) {
 }
 
 func TestImagesService_ImageToBytes(t *testing.T) {
+	setupImagesServiceTest()
+	defer teardownImagesServiceTest()
+
 	t.Run("should return bytes", func(t *testing.T) {
 		bytesPointer, err := imagesService.ImageToBytes(img)
 		if err != nil {
@@ -134,7 +152,7 @@ func TestImagesService_ImageToBytes(t *testing.T) {
 	})
 }
 
-func TestMain(m *testing.M) {
+func setupImagesServiceTest() {
 	bytes, err := os.ReadFile("./mock/mock-image.jpg")
 	if err != nil {
 		fmt.Println("failed to read image file")
@@ -149,8 +167,9 @@ func TestMain(m *testing.M) {
 	}
 
 	img = *origImg
+}
 
-	os.Exit(m.Run())
+func teardownImagesServiceTest() {
 }
 
 func saveImage(img image.Image, action string) {
