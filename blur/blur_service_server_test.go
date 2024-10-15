@@ -11,7 +11,7 @@ import (
 
 var blurServiceServer *BlurServiceServer
 
-func TestMain(m *testing.M) {
+func setupBlurServiceServerTest() {
 	_, err := config.LoadConfig("../.env.test")
 	if err != nil {
 		fmt.Println("failed to load config, got:", err)
@@ -19,18 +19,24 @@ func TestMain(m *testing.M) {
 	}
 
 	blurServiceServer = NewBlurServiceServer()
+}
 
-	code := m.Run()
-	os.Exit(code)
+func teardownBlurServiceServerTest() {
+
 }
 
 func TestBlurServiceServerIsDefined(t *testing.T) {
+	setupBlurServiceServerTest()
+	defer teardownBlurServiceServerTest()
+
 	if blurServiceServer == nil {
 		t.Fatalf("expected blurServiceServer to be defined")
 	}
 }
 
 func TestBlurServiceServer_BlurImages(t *testing.T) {
+	setupBlurServiceServerTest()
+	defer teardownBlurServiceServerTest()
 	cfg := config.GetConfig()
 
 	t.Run("should return BadRequest error if no images provided", func(t *testing.T) {
