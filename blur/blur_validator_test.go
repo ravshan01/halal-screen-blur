@@ -161,7 +161,7 @@ func assertErrorImage(t *testing.T, res BlurValidationResult[*proto.BlurredImage
 }
 
 func setupBlurValidatorTest() {
-	_, err := config.LoadConfig("../.env.test")
+	_, err := config.LoadConfig()
 	if err != nil {
 		fmt.Println("failed to load config, got:", err)
 		os.Exit(1)

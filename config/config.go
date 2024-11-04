@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 var cfg *Config = &Config{}
@@ -17,8 +18,13 @@ func GetConfig() *Config {
 	return cfg
 }
 
-func LoadConfig(filenames ...string) (*Config, error) {
-	err := godotenv.Load(filenames...)
+func LoadConfig() (*Config, error) {
+	appEnv := os.Getenv("APP_ENV")
+	if appEnv == "" {
+		appEnv = "dev"
+	}
+
+	err := godotenv.Load(".env." + appEnv)
 	if err != nil {
 		return nil, err
 	}
