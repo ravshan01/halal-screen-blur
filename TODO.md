@@ -1,0 +1,1 @@
+- Set 'APP_ENV=test' for testing
