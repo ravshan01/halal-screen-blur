@@ -2,56 +2,94 @@ package blur
 
 import (
 	"context"
-	"halal-screen-blur/config"
 	"halal-screen-blur/images"
 	"halal-screen-blur/proto"
+	"image"
 )
 
 type BlurServiceServer struct {
 	proto.UnimplementedBlurServiceServer
 
 	imagesService images.IIMagesService
+	blurValidator IBlurValidator
 }
 
 func NewBlurServiceServer() *BlurServiceServer {
 	return &BlurServiceServer{
 		imagesService: images.NewImagesService(),
+		blurValidator: NewBlurValidator(),
 	}
 }
 
 func (s *BlurServiceServer) BlurImages(_ context.Context, req *proto.BlurImagesRequest) (*proto.BlurImagesResponse, error) {
 	imagesForBlur := req.GetImages()
 
-	res := s.checkHasImagesAndNotTooMany(imagesForBlur)
-	if res != nil {
-		return res, nil
+	valResult := s.blurValidator.ValidateImagesCount(imagesForBlur)
+	if !valResult.Success {
+		return valResult.ResWithErr, nil
 	}
 
-	return &proto.BlurImagesResponse{}, nil
+	blurredImages := make([]*proto.BlurredImage, 0, len(imagesForBlur))
+
+	for _, elem := range imagesForBlur {
+		blurredImg, blurErr := s.blurImage(elem)
+		if blurErr != nil {
+			blurredImages = append(blurredImages, &proto.BlurredImage{
+				Error: &proto.BlurredImage_Error{
+					Code:    proto.BlurredImage_InternalError,
+					Message: blurErr.Error(),
+				},
+			})
+		}
+
+		blurredImages = append(blurredImages, blurredImg)
+	}
+
+	return &proto.BlurImagesResponse{
+		BlurredImages: blurredImages,
+	}, nil
 }
 
-/*
-Return `BlurImagesResponse` with error if no images provided or too many images
-*/
-func (s *BlurServiceServer) checkHasImagesAndNotTooMany(imagesForBlur []*proto.ImageForBlur) *proto.BlurImagesResponse {
-	if len(imagesForBlur) == 0 {
-		return &proto.BlurImagesResponse{
-			Error: &proto.BlurError{
-				Code:    proto.BlurErrorCode_BadRequest,
-				Message: "no imagesForBlur provided",
-			},
-		}
+func (s *BlurServiceServer) blurImage(imageForBlur *proto.ImageForBlur) (*proto.BlurredImage, error) {
+	valResult := s.blurValidator.ValidateImage(imageForBlur)
+	if !valResult.Success {
+		return valResult.ResWithErr, nil
 	}
 
-	cfg := config.GetConfig()
-	if len(imagesForBlur) > cfg.MaxImagesPerRequest {
-		return &proto.BlurImagesResponse{
-			Error: &proto.BlurError{
-				Code:    proto.BlurErrorCode_MaxImagesExceeded,
-				Message: "too many imagesForBlur",
-			},
+	img, toImgErr := s.imagesService.BytesToImage(imageForBlur.GetContent())
+	if toImgErr != nil {
+		return nil, toImgErr
+	}
+	var blurredImg = *img
+
+	for _, coords := range imageForBlur.GetCoords() {
+		rect := image.Rect(int(coords.GetX()), int(coords.GetY()), int(coords.GetWidth()), int(coords.GetHeight()))
+
+		// TODO: create and use IImagesService.BlurPart method
+		croppedImg, cropErr := s.imagesService.Crop(blurredImg, rect)
+		if cropErr != nil {
+			return nil, cropErr
 		}
+
+		croppedBlurredImg, blurErr := s.imagesService.Blur(*croppedImg, int32(imageForBlur.GetPercentage()))
+		if blurErr != nil {
+			return nil, blurErr
+		}
+
+		pastedImg, pasteErr := s.imagesService.Paste(blurredImg, *croppedBlurredImg, image.Point{int(coords.GetX()), int(coords.GetY())})
+		if pasteErr != nil {
+			return nil, pasteErr
+		}
+
+		blurredImg = *pastedImg
 	}
 
-	return nil
+	blurredImgBytes, imgToBytesErr := s.imagesService.ImageToBytes(blurredImg)
+	if imgToBytesErr != nil {
+		return nil, imgToBytesErr
+	}
+
+	return &proto.BlurredImage{
+		Content: *blurredImgBytes,
+	}, nil
 }
