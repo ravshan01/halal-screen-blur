@@ -1,8 +1,8 @@
 package images
 
 import (
-	"errors"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"image"
 	"os"
 	"testing"
@@ -18,17 +18,11 @@ func TestImagesService_CheckIsValidImage(t *testing.T) {
 	defer teardownImagesServiceTest()
 
 	t.Run("valid image", func(t *testing.T) {
-		valid := imagesService.CheckIsValidImage(imgBytes)
-		if !valid {
-			t.Fatalf("expected image to be valid")
-		}
+		assert.Equal(t, true, imagesService.CheckIsValidImage(imgBytes), "expected image to be valid")
 	})
 
 	t.Run("invalid image", func(t *testing.T) {
-		valid := imagesService.CheckIsValidImage([]byte{})
-		if valid {
-			t.Fatalf("expected image to be invalid")
-		}
+		assert.Equal(t, false, imagesService.CheckIsValidImage([]byte{}), "expected image to be invalid")
 	})
 }
 
@@ -38,27 +32,23 @@ func TestImagesService_Blur(t *testing.T) {
 
 	t.Run("should return InvalidBlurPercentageError if percentage < 0 or > 100 ", func(t *testing.T) {
 		_, err := imagesService.Blur(img, -1)
-		if !errors.Is(err, InvalidBlurPercentageError) {
-			t.Fatalf("expected error to be InvalidBlurPercentageError")
-		}
+		assert.NotNil(t, err, "expected error, got nil")
+		assert.ErrorIs(t, err, InvalidBlurPercentageError, "expected error to be InvalidBlurPercentageError")
 
 		_, err = imagesService.Blur(img, 101)
-		if !errors.Is(err, InvalidBlurPercentageError) {
-			t.Fatalf("expected error to be InvalidBlurPercentageError")
-		}
+		assert.NotNil(t, err, "expected error, got nil")
+		assert.ErrorIs(t, err, InvalidBlurPercentageError, "expected error to be InvalidBlurPercentageError")
 	})
 
 	// Check './mock/processed/mock-image__blurred.jpg' to see the blurred image
 	t.Run("should return blurred image", func(t *testing.T) {
 		blurredImgPointer, err := imagesService.Blur(img, 50)
-		if err != nil {
-			t.Fatalf("expected no error, got %v", err)
-		}
+		assert.Nil(t, err, "expected no error, got %v", err)
 
 		blurredImg := *blurredImgPointer
-		if blurredImg.Bounds().Dx() != img.Bounds().Dx() || blurredImg.Bounds().Dy() != img.Bounds().Dy() {
-			t.Fatalf("expected blurred image to have same dimensions as original image")
-		}
+		assert.NotNil(t, blurredImg, "expected blurred image to be returned")
+		assert.Equal(t, img.Bounds().Dx(), blurredImg.Bounds().Dx(), "expected blurred image to have same width as original image")
+		assert.Equal(t, img.Bounds().Dy(), blurredImg.Bounds().Dy(), "expected blurred image to have same height as original image")
 
 		saveImage(blurredImg, "blurred")
 	})
@@ -74,14 +64,12 @@ func TestImagesService_Crop(t *testing.T) {
 		rect := image.Rect(x1, y1, x1+width, y1+height)
 
 		croppedImgPointer, err := imagesService.Crop(img, rect)
-		if err != nil {
-			t.Fatalf("expected no error, got %v", err)
-		}
+		assert.Nil(t, err, "expected no error, got %v", err)
 
 		croppedImg := *croppedImgPointer
-		if croppedImg.Bounds().Dx() != width || croppedImg.Bounds().Dy() != height {
-			t.Fatalf("expected cropped image to have width %d and height %d, got width %d and height %d", width, height, croppedImg.Bounds().Dx(), croppedImg.Bounds().Dy())
-		}
+		assert.NotNil(t, croppedImg, "expected cropped image to be returned")
+		assert.Equal(t, width, croppedImg.Bounds().Dx(), "expected cropped image to have width %d, got width %d", width, croppedImg.Bounds().Dx())
+		assert.Equal(t, height, croppedImg.Bounds().Dy(), "expected cropped image to have height %d, got height %d", height, croppedImg.Bounds().Dy())
 
 		saveImage(croppedImg, "cropped")
 	})
@@ -96,20 +84,18 @@ func TestImagesService_Paste(t *testing.T) {
 		cropRect := image.Rect(0, 0, 400, 400)
 		croppedImgPointer, cropErr := imagesService.Crop(img, cropRect)
 		croppedImg := *croppedImgPointer
-		if cropErr != nil {
-			t.Fatalf("expected no error, got %v", cropErr)
-		}
+
+		assert.NotNil(t, croppedImg, "expected cropped image to be returned")
+		assert.Nil(t, cropErr, "expected no error, got %v", cropErr)
 
 		pasteRect := image.Point{X: 200, Y: 200}
 		pastedImgPointer, err := imagesService.Paste(img, croppedImg, pasteRect)
-		if err != nil {
-			t.Fatalf("expected no error, got %v", err)
-		}
+		assert.Nil(t, err, "expected no error, got %v", err)
 
 		pastedImg := *pastedImgPointer
-		if pastedImg.Bounds().Dx() != img.Bounds().Dx() || pastedImg.Bounds().Dy() != img.Bounds().Dy() {
-			t.Fatalf("expected pasted image to have same dimensions as original image")
-		}
+		assert.NotNil(t, pastedImg, "expected pasted image to be returned")
+		assert.Equal(t, img.Bounds().Dx(), pastedImg.Bounds().Dx(), "expected pasted image to have same width as original image")
+		assert.Equal(t, img.Bounds().Dy(), pastedImg.Bounds().Dy(), "expected pasted image to have same height as original image")
 
 		saveImage(pastedImg, "pasted")
 	})
@@ -121,19 +107,13 @@ func TestImagesService_BytesToImage(t *testing.T) {
 
 	t.Run("should return image", func(t *testing.T) {
 		imgPointer, err := imagesService.BytesToImage(imgBytes)
-		if err != nil {
-			t.Fatalf("expected no error, got %v", err)
-		}
-		if imgPointer == nil {
-			t.Fatalf("expected image to be returned")
-		}
+		assert.Nil(t, err, "expected no error, got %v", err)
+		assert.NotNil(t, imgPointer, "expected image to be returned")
 	})
 
 	t.Run("should return error if image is invalid", func(t *testing.T) {
 		_, err := imagesService.BytesToImage([]byte{})
-		if err == nil {
-			t.Fatalf("expected error to be returned")
-		}
+		assert.NotNil(t, err, "expected error, got nil")
 	})
 }
 
@@ -143,12 +123,8 @@ func TestImagesService_ImageToBytes(t *testing.T) {
 
 	t.Run("should return bytes", func(t *testing.T) {
 		bytesPointer, err := imagesService.ImageToBytes(img)
-		if err != nil {
-			t.Fatalf("expected no error, got %v", err)
-		}
-		if bytesPointer == nil {
-			t.Fatalf("expected bytes to be returned")
-		}
+		assert.Nil(t, err, "expected no error, got %v", err)
+		assert.NotNil(t, bytesPointer, "expected bytes to be returned")
 	})
 }
 
